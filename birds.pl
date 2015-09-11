@@ -37,6 +37,7 @@ order(tubenose):-
 order(waterfowl) :-
     feet(webbed),
     bill(flat).
+
 family(albatross):-
     order(tubenose),
     size(large),
@@ -46,6 +47,7 @@ family(swan):-
     neck(long),
     color(white),
     flight(ponderous).
+
 country(united_states):-region(mid_west).
 country(united_states):-region(south_west).
 country(united_states):-region(north_west).
@@ -60,6 +62,7 @@ region(south_west):-
     state(X),
     member(X, [florida, mississippi]).
 
+region(X):-ask(region,X).
 nostrils(X):-ask(nostrils,X).
 live(X):-ask(live,X).
 bill(X):-ask(bill,X).
@@ -69,12 +72,26 @@ color(X):-ask(color,X).
 feet(X):-ask(feet,X).
 neck(X):-ask(neck,X).
 flight(X):-ask(flight,X).
-region(X):-ask(region,X).
 province(X):-ask(province,X).
+voice(X):-ask(voice,X).
+season(X):-ask(season,X).
+head(X):-ask(head,X).
+cheek(X):-ask(cheek,X).
 %BUG: there are problem with asking state(X) :/
 
 % User interface
 ask(Attr,Val):-
+    known(yes, Attr, Val),
+    !.
+
+ask(Attr,Val):-
+    known(_,Attr,Val),
+    !,
+    fail.
+
+ask(Attr,Val):-
     write(Attr:Val),
     write('? '),
-    read(yes).
+    read(YesNo),
+    asserta(known(YesNo, Attr, Val)),
+    YesNo == yes.
