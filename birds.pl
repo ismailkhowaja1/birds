@@ -79,7 +79,16 @@ head(X):-ask(head,X).
 cheek(X):-ask(cheek,X).
 %BUG: there are problem with asking state(X) :/
 
+multivalued(voice).
+multivalued(feed).
 % User interface
+ask(Attr,Val):-
+    \+ multivalued(Attr),
+    known(yes,Attr,Val2),
+    Val\==Val2,
+    !,
+    fail.
+
 ask(Attr,Val):-
     known(yes, Attr, Val),
     !.
