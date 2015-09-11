@@ -59,3 +59,22 @@ region(new_england):-
 region(south_west):-
     state(X),
     member(X, [florida, mississippi]).
+
+nostrils(X):-ask(nostrils,X).
+live(X):-ask(live,X).
+bill(X):-ask(bill,X).
+size(X):-ask(size,X).
+wings(X):-ask(wings,X).
+color(X):-ask(color,X).
+feet(X):-ask(feet,X).
+neck(X):-ask(neck,X).
+flight(X):-ask(flight,X).
+region(X):-ask(region,X).
+province(X):-ask(province,X).
+%BUG: there are problem with asking state(X) :/
+
+% User interface
+ask(Attr,Val):-
+    write(Attr:Val),
+    write('? '),
+    read(yes).
