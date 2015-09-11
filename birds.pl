@@ -66,12 +66,12 @@ region(X):-ask(region,X).
 nostrils(X):-ask(nostrils,X).
 live(X):-ask(live,X).
 bill(X):-ask(bill,X).
-size(X):-ask(size,X).
+size(X):-menuask(size,X, [large, plump, medium, small]).
 wings(X):-ask(wings,X).
 color(X):-ask(color,X).
 feet(X):-ask(feet,X).
 neck(X):-ask(neck,X).
-flight(X):-ask(flight,X).
+flight(X):-menuask(flight,X, [ponderous, agile, flap_glide]).
 province(X):-ask(province,X).
 voice(X):-ask(voice,X).
 season(X):-ask(season,X).
@@ -82,6 +82,35 @@ cheek(X):-ask(cheek,X).
 multivalued(voice).
 multivalued(feed).
 % User interface
+menuask(Attr,Val, _) :-
+    \+ multivalued(Attr),
+    known(yes,Attr,Val2),
+    Val\=Val2,
+    !,
+    fail.
+
+menuask(Attr,Val,_):-
+    known(yes,Attr,Val),
+    !.
+menuask(Attr,Val,_):-
+    known(_,Attr,Val),
+    !,
+    fail.
+
+menuask(Attr,Val, MenuList) :-
+    write('What is the value for '), write(Attr),write('?'),nl,
+    write(MenuList),nl,
+    read(X),
+    check_val(X,Attr,Val, MenuList),
+    asserta(known(yes, Attr, X)),
+    X==Val.
+check_val(X,_,_,MenuList):-
+    member(X, MenuList),
+    !.
+check_val(X,A,V,MenuList):-
+    write(X),write(' is not a legal value, try again.'),nl,
+    menuask(A,V,MenuList).
+
 ask(Attr,Val):-
     \+ multivalued(Attr),
     known(yes,Attr,Val2),
